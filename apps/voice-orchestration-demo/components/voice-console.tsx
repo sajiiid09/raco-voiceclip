@@ -28,7 +28,7 @@ import {
 type RuntimeClient = Awaited<ReturnType<typeof createPipecatClient>>;
 
 const connectEndpoint =
-  process.env.NEXT_PUBLIC_CONNECT_ENDPOINT ?? "http://localhost:7860/connect";
+  process.env.NEXT_PUBLIC_CONNECT_ENDPOINT ?? "http://localhost:7860/start";
 
 const statusCopy = {
   idle: "Standby",
@@ -204,7 +204,13 @@ export function VoiceConsole() {
     try {
       const client = await createPipecatClient(dispatch);
       clientRef.current = client;
-      await client.startBotAndConnect({ endpoint: connectEndpoint });
+      await client.startBotAndConnect({
+        endpoint: connectEndpoint,
+        body: {
+          transport: "daily",
+          createDailyRoom: true,
+        },
+      });
     } catch (error) {
       dispatch({
         type: "error",
